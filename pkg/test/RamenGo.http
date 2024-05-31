@@ -1,0 +1,22 @@
+POST https://api.tech.redventures.com.br/orders/generate-id HTTP/1.1
+x-api-key: ZtVdh8XQ2U8pWI2gmZ7f796Vh8GllXoN7mr0djNf
+
+###
+
+GET https://api.tech.redventures.com.br/broths HTTP/1.1
+x-api-key: ZtVdh8XQ2U8pWI2gmZ7f796Vh8GllXoN7mr0djNf
+
+###
+
+GET https://api.tech.redventures.com.br/proteins HTTP/1.1
+x-api-key: ZtVdh8XQ2U8pWI2gmZ7f796Vh8GllXoN7mr0djNf
+
+###
+
+POST https://api.tech.redventures.com.br/orders HTTP/1.1
+x-api-key: ZtVdh8XQ2U8pWI2gmZ7f796Vh8GllXoN7mr0djNf
+
+{
+  "brothId": "1",
+  "proteinId": "1"
+}
