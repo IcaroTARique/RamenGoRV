@@ -21,6 +21,7 @@ func (p *ProductHandler) ListBroths(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
+	w.Header().Set("Content-Type", "application/json")
 	if err := json.NewEncoder(w).Encode(broths); err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 	}
@@ -28,11 +29,12 @@ func (p *ProductHandler) ListBroths(w http.ResponseWriter, r *http.Request) {
 }
 
 func (p *ProductHandler) ListProteins(w http.ResponseWriter, r *http.Request) {
-	proteins, err := p.ProductPersistence.GetProteins()
+	proteins, err := p.ProductPersistence.GetProtein()
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
+	w.Header().Set("Content-Type", "application/json")
 	if err := json.NewEncoder(w).Encode(proteins); err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 	}
@@ -51,6 +53,7 @@ func (p *ProductHandler) CreateOrder(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
+	w.Header().Set("Content-Type", "application/json")
 	if err := json.NewEncoder(w).Encode(res); err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 	}

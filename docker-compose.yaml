@@ -1,0 +1,27 @@
+version: '3'
+
+services:
+  mysql:
+    image: mysql:5.7
+    container_name: mysql
+    restart: always
+    platform: linux/amd64
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: ramen
+      MYSQL_PASSWORD: root
+    ports:
+      - "3306:3306"
+    networks:
+      - ramen_network
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./scripts:/docker-entrypoint-initdb.d
+
+networks:
+  ramen_network:
+    driver: bridge
+
+volumes:
+  mysql_data:
+    driver: local

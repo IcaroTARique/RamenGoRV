@@ -48,7 +48,7 @@ func (c *ClientConnection) GetBroths() ([]dto.Broth, error) {
 	return brothValues, nil
 }
 
-func (c *ClientConnection) GetProteins() ([]dto.Protein, error) {
+func (c *ClientConnection) GetProtein() ([]dto.Protein, error) {
 
 	URL := c.BaseURL + proteinPath
 	req, err := http.NewRequest("GET", URL, nil)

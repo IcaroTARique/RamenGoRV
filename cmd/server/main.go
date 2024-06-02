@@ -3,12 +3,13 @@ package main
 import (
 	"github.com/IcaroTARique/RamenGoRV/config"
 	"github.com/IcaroTARique/RamenGoRV/internal/entity"
-	"github.com/IcaroTARique/RamenGoRV/internal/infra/client/api"
+	"github.com/IcaroTARique/RamenGoRV/internal/infra/database"
 	"github.com/IcaroTARique/RamenGoRV/internal/infra/webserver/handlers"
 	"github.com/IcaroTARique/RamenGoRV/internal/middleware"
 	"github.com/go-chi/chi"
-	"gorm.io/driver/sqlite"
+	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 	"net/http"
 )
 
@@ -35,18 +36,21 @@ func main() {
 		panic(err)
 	}
 
-	db, err := gorm.Open(sqlite.Open("ramen.db"), &gorm.Config{})
+	dsn := configurations.DBUser + ":" + configurations.DBPassword + "@tcp(" + configurations.DBHost + ":" + configurations.DBPort + ")/" + configurations.DBName + "?charset=utf8mb4&parseTime=True&loc=Local"
+	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{Logger: logger.Default.LogMode(logger.Info)})
+	//db, err := gorm.Open(mysql.Open("ramen.db"), &gorm.Config{})
 	if err != nil {
 		panic(err)
 	}
 
-	if err := db.AutoMigrate(&entity.Product{}); err != nil {
+	if err := db.AutoMigrate(&entity.Broth{}); err != nil {
 		panic(err)
 	}
-	//productDB := database.NewProduct(db)
-	productAPI := api.NewClient()
+	productDB := database.NewProduct(db)
+	//productAPI := api.NewClient()
 
-	productHandler := handlers.NewProductHandler(productAPI)
+	productHandler := handlers.NewProductHandler(productDB)
+	//productHandler := handlers.NewProductHandler(productAPI)
 
 	r := chi.NewRouter()
 

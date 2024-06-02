@@ -17,7 +17,7 @@ func TestGetBroths(t *testing.T) {
 
 func TestGetProteins(t *testing.T) {
 	clientProtein := NewClient()
-	proteins, err := clientProtein.GetProteins()
+	proteins, err := clientProtein.GetProtein()
 	fmt.Println(proteins)
 	assert.Nil(t, err)
 	assert.NotNil(t, proteins)
