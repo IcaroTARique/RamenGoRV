@@ -1,6 +1,16 @@
 version: '3'
 
 services:
+  app:
+    build: .
+    container_name: ramen
+    ports:
+      - "8000:8000"
+    depends_on:
+      - mysql
+    networks:
+        - ramen_network
+
   mysql:
     image: mysql:5.7
     container_name: mysql

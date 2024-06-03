@@ -34,5 +34,5 @@ type OrderId struct {
 }
 
 type Error struct {
-	Error string `json:"message"`
+	Message string `json:"message"`
 }

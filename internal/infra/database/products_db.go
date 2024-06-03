@@ -20,9 +20,8 @@ func NewProduct(db *gorm.DB) *ProductDB {
 func (p *ProductDB) GetBroths() ([]dto.Broth, error) {
 	var broths []entity.Broth
 	err := p.DB.Find(&broths).Error
-	fmt.Println("BROTHS", broths)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("error getting broths")
 	}
 
 	var brothsDto []dto.Broth
@@ -44,7 +43,7 @@ func (p *ProductDB) GetProtein() ([]dto.Protein, error) {
 	var protein []entity.Protein
 	err := p.DB.Find(&protein).Error
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("error getting proteins")
 	}
 
 	var proteinsDto []dto.Protein
@@ -65,16 +64,25 @@ func (p *ProductDB) GetProtein() ([]dto.Protein, error) {
 
 func (p *ProductDB) CreateOrder(orderRequest dto.OrderRequest) (*dto.OrderResponse, error) {
 
+	_, errBroth := p.GetBrothById(orderRequest.BrothId)
+	if errBroth != nil {
+		return nil, fmt.Errorf("broth id %s does not exist", orderRequest.BrothId)
+	}
+	_, errProtein := p.GetProteinById(orderRequest.ProteinId)
+	if errProtein != nil {
+		return nil, fmt.Errorf("protein id %s does not exist", orderRequest.ProteinId)
+	}
+
 	orderEntity := entity.NewOrder(orderRequest.BrothId, orderRequest.ProteinId)
 
 	err := p.DB.Create(&orderEntity).Error
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("error creating order")
 	}
 
 	response, err := p.GetResponse(orderRequest.BrothId, orderRequest.ProteinId)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("error getting response")
 	}
 
 	return response, nil
@@ -94,4 +102,22 @@ func (p *ProductDB) GetResponse(brothId, proteinId string) (*dto.OrderResponse, 
 		Description: answer.Description,
 		Image:       answer.Image,
 	}, nil
+}
+
+func (p *ProductDB) GetBrothById(id string) (*entity.Broth, error) {
+	var broth entity.Broth
+	err := p.DB.First(&broth, "id = ?", id).Error
+	if err != nil {
+		return nil, err
+	}
+	return &broth, nil
+}
+
+func (p *ProductDB) GetProteinById(id string) (*entity.Protein, error) {
+	var protein entity.Protein
+	err := p.DB.First(&protein, "id = ?", id).Error
+	if err != nil {
+		return nil, err
+	}
+	return &protein, nil
 }
