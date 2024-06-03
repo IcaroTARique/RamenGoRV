@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"github.com/IcaroTARique/RamenGoRV/config"
 	"github.com/IcaroTARique/RamenGoRV/internal/entity"
 	"github.com/IcaroTARique/RamenGoRV/internal/infra/database"
@@ -40,6 +41,7 @@ func main() {
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{Logger: logger.Default.LogMode(logger.Info)})
 	//db, err := gorm.Open(mysql.Open("ramen.db"), &gorm.Config{})
 	if err != nil {
+		fmt.Println("DNS: ", dsn)
 		panic(err)
 	}
 

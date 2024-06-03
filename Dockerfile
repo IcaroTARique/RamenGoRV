@@ -1,21 +1,33 @@
-FROM golang:1.21 as builder
+# Usar uma imagem base do Golang para construir a aplicação
+FROM golang:1.21-alpine as builder
 
+# Define o diretório de trabalho dentro do container
 WORKDIR /app
 
+# Copia os arquivos go.mod e go.sum e baixa as dependências
 COPY go.mod go.sum ./
-RUN go mod download
 
+# Copia o código fonte da aplicação
 COPY . .
-ENV GOPROXY=direct
+COPY ./cmd/server/.env .
+RUN ls -la
 
-RUN go build -o /app/main ./cmd/server/main.go
+ENV GOPROXY="https://goproxy.io"
+RUN go mod tidy
 
+# Compila a aplicação
+RUN CGO_ENABLED=0 GOOS=linux go build -ldflags="-w -s" -o server ./cmd/server/main.go
 
-FROM gcr.io/distroless/base-debian10
+# Utiliza uma imagem alpine mais leve para rodar a aplicação
+FROM alpine:latest
 
-COPY --from=builder /app/main /app/main
+COPY --from=builder /app/server .
+COPY ./cmd/server/.env .
+# Instalar dependências adicionais necessárias
+RUN apk add --no-cache libc6-compat
 
-WORKDIR /app
+# Define o diretório de trabalho e a porta que será exposta
 EXPOSE 8000
 
-CMD ["/app/main"]
+# Comando para rodar a aplicação
+CMD ["./server"]

@@ -3,13 +3,23 @@ version: '3'
 services:
   app:
     build: .
-    container_name: ramen
+    container_name: ramen_app
+    environment:
+      - DB_DRIVER=mysql
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_USER=root
+      - DB_PASSWORD=root
+      - DB_NAME=ramen
+      - WEB_SERVER_PORT=8000
     ports:
       - "8000:8000"
     depends_on:
       - mysql
+    restart: always
     networks:
         - ramen_network
+
 
   mysql:
     image: mysql:5.7
