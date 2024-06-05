@@ -6,6 +6,18 @@ Contém um banco de dados MySQL e uma aplicação escrita
 em Golang que se comunica com o mundo exterior mediante
 seus endpoints.
 
+### Banco de dados
+Se você quiser utilizá-lo com banco de dados, basta rodar o
+docker-compose com a variável de ambiente ```TYPE_OF_APPLICATION=DB```
+ou mesmo deixar sem nenhuma definição, e por padrão ele irá
+usar.
+
+### API
+Se você quiser utilizá-lo como um consumidor de API, basta rodar o
+docker-compose com a variável de ambiente ```TYPE_OF_APPLICATION=API```.
+O consumidor de APIs trata-se de uma versão que simula necessidade de
+trabalhar apenas com consumo de APIs.
+
 ## How to...
 Esta sessão contém instruções para rodar o projeto
 localmente usando docker-compose. 
