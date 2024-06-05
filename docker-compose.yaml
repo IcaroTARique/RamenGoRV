@@ -12,6 +12,7 @@ services:
       - DB_PASSWORD=root
       - DB_NAME=ramen
       - WEB_SERVER_PORT=8000
+      - TYPE_OF_APPLICATION=DB
     ports:
       - "8000:8000"
     depends_on:

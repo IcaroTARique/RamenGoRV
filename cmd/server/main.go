@@ -4,7 +4,9 @@ import (
 	"fmt"
 	"github.com/IcaroTARique/RamenGoRV/config"
 	"github.com/IcaroTARique/RamenGoRV/internal/entity"
+	"github.com/IcaroTARique/RamenGoRV/internal/infra/client/api"
 	"github.com/IcaroTARique/RamenGoRV/internal/infra/database"
+	"github.com/IcaroTARique/RamenGoRV/internal/infra/port"
 	"github.com/IcaroTARique/RamenGoRV/internal/infra/webserver/handlers"
 	"github.com/IcaroTARique/RamenGoRV/internal/middleware"
 	"github.com/go-chi/chi"
@@ -45,14 +47,20 @@ func main() {
 		panic(err)
 	}
 
-	if err := db.AutoMigrate(&entity.Broth{}); err != nil {
+	if err := db.AutoMigrate(&entity.Broth{}, &entity.Protein{}); err != nil {
 		panic(err)
 	}
-	productDB := database.NewProduct(db)
-	//productAPI := api.NewClient()
 
-	productHandler := handlers.NewProductHandler(productDB)
-	//productHandler := handlers.NewProductHandler(productAPI)
+	var product port.ProductInterface
+	var productHandler *handlers.ProductHandler
+
+	if configurations.TypeOfApplication == "API" {
+		product = api.NewClient()
+		productHandler = handlers.NewProductHandler(product)
+	} else {
+		product = database.NewProduct(db)
+		productHandler = handlers.NewProductHandler(product)
+	}
 
 	r := chi.NewRouter()
 
